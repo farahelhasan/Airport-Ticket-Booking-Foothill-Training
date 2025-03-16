@@ -1,0 +1,50 @@
+# Ignore build outputs
+bin/
+obj/
+Debug/
+Release/
+
+# Ignore Visual Studio specific files
+.vscode/
+.vs/
+*.user
+*.suo
+*.cache
+*.pdb
+*.tlog
+*.VC.db
+*.dbmdl
+*.opendb
+
+# Ignore dependency-related files
+*.dll
+*.exe
+*.log
+*.lock
+*.nupkg
+*.snupkg
+
+# Ignore package manager files
+node_modules/
+packages/
+project.lock.json
+
+# Ignore IDE configurations
+.idea/
+*.csproj.user
+
+# Ignore ReSharper and Rider files
+*.sln.iml
+*.DotSettings.user
+
+# Ignore ASP.NET environment settings
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+
+# Ignore Entity Framework migrations snapshots
+Migrations/*Snapshot.cs
+
+# Ignore JetBrains Rider workspace files
+.idea/
