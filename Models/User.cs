@@ -8,8 +8,10 @@ namespace Airport_Ticket_Booking.Models
 {
     class User
     {
+        public int UserId { set; get; }
+
         public string Username { set; get; }
-        public string Password { set; get; }
         public string Type { get; init; }
+
     }
 }
