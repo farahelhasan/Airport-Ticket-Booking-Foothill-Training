@@ -17,7 +17,6 @@ namespace Airport_Ticket_Booking.Models
         public string ArrivalAirport { set; get; }
         public DateTime DepartureDate { set; get; }
 
-        public double Price { set; get; }
 
     }
 }
