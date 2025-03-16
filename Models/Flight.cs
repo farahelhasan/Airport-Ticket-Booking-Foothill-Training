@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Airport_Ticket_Booking.Models
 {
-    class User
+    class Flight
     {
-        public string Username { set; get; }
-        public string Password { set; get; }
-        public string Type { get; init; }
     }
 }
