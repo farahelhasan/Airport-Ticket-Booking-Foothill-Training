@@ -15,7 +15,8 @@ namespace Airport_Ticket_Booking.Models
         public int FlightID { set; get; }
         public int UserID { set; get; }
 
-        public Class Class { set; get; }
+        public String Class { set; get; }
+        public double Price { set; get; }
 
         public override string ToString()
         {
