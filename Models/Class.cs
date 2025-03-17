@@ -14,5 +14,10 @@ namespace Airport_Ticket_Booking.Models
         public string ClassType { set; get; }
         public int SeatsAvailable { set; get; }
 
+        public override string ToString()
+        {
+            return $"FlightID: {FlightID} | Price: {Price} | ClassType: {ClassType} | SeatsAvailable: {SeatsAvailable}";
+        }
+
     }
 }
