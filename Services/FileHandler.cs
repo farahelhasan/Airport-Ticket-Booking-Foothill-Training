@@ -12,6 +12,7 @@ namespace Airport_Ticket_Booking.Services
     {
         private const string FlightsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flights.csv";
         private const string BookingsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\booking.csv";
+        private const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
 
         public static List<Flight> ReadFlights()
         {
@@ -60,7 +61,7 @@ namespace Airport_Ticket_Booking.Services
                             FlightID = int.Parse(values[1]),
                             UserID = int.Parse(values[2]),
                             Class = values[3],
-                            Price = values[4]
+                            Price = double.Parse(values[4])
                         });
                     }
                 }
@@ -68,5 +69,30 @@ namespace Airport_Ticket_Booking.Services
             return bookings;
         }
 
+        public static List<Class> ReadClasses()
+        {
+            List<Class> classes = new List<Class>();
+
+            if (File.Exists(ClassesFile))
+            {
+                var lines = File.ReadAllLines(ClassesFile).Skip(1); // Skip header
+
+                foreach (var line in lines)
+                {
+                    var values = line.Split(',');
+                    if (values.Length == 4)
+                    {
+                        classes.Add(new Class
+                        {
+                            FlightID = int.Parse(values[0]),
+                            ClassType = values[1],
+                            Price = double.Parse(values[2]),
+                            SeatsAvailable = int.Parse(values[3]),
+                        });
+                    }
+                }
+            }
+            return classes;
+        }
     }
 }
