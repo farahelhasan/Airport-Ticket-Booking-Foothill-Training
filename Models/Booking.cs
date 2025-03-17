@@ -14,7 +14,7 @@ namespace Airport_Ticket_Booking.Models
         public int FlightID { set; get; }
         public int UserID { set; get; }
 
-        public string Class { set; get; }
+        public Class Class { set; get; }
        
     }
 }
