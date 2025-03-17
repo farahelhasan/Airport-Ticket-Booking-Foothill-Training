@@ -94,5 +94,22 @@ namespace Airport_Ticket_Booking.Services
             }
             return classes;
         }
+
+        public static void SaveBooking(Booking booking)
+        {
+            bool fileExists = File.Exists(BookingsFile);
+            // using : keyword ensures that StreamWriter automatically closes the file
+            // opens the file in append mode
+            using (StreamWriter sw = new StreamWriter(BookingsFile, true))
+            {
+                if (!fileExists)
+                {
+                    sw.WriteLine("BookingID,FlightID,UserID,Class,Price");
+                }
+                sw.WriteLine($"{booking.BookingID},{booking.FlightID},{booking.UserID},{booking.Class},{booking.Price}");
+            }
+        }
+
     }
+
 }
