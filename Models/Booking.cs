@@ -20,7 +20,7 @@ namespace Airport_Ticket_Booking.Models
 
         public override string ToString()
         {
-            return $"BookingID: {BookingID} | FlightID: {FlightID} | UserID: {UserID} | Class: {Class}";
+            return $"BookingID: {BookingID} | FlightID: {FlightID} | UserID: {UserID} | Class: {Class} | Price: {Price}";
         }
 
     }
