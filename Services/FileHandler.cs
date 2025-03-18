@@ -14,7 +14,7 @@ namespace Airport_Ticket_Booking.Services
         private const string BookingsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\booking.csv";
         private const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
 
-        public static List<Flight> ReadFlights()
+        public static List<Flight> ReadFlights(string FlightsFile)
         {
             List<Flight> flights = new List<Flight>();
 
@@ -69,7 +69,7 @@ namespace Airport_Ticket_Booking.Services
             return bookings;
         }
 
-        public static List<Class> ReadClasses()
+        public static List<Class> ReadClasses(string ClassesFile)
         {
             List<Class> classes = new List<Class>();
 
