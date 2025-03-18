@@ -10,6 +10,7 @@ namespace Airport_Ticket_Booking.Services
     class FlightServices
     {
         private const string FlightsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flights.csv";
+        private const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
 
         public static List<Flight> SearchFlights(string DepartureCountry, string DestinationCountry, string DepartureDate)
         {
@@ -134,5 +135,24 @@ namespace Airport_Ticket_Booking.Services
             }
         }
 
+        public static Flight GetFlight(int flightId)
+        {
+            List<Flight> flights = FileHandler.ReadFlights(FlightsFile);
+            return (from flight in flights
+                    where flight.FlightID == flightId
+                    select flight).FirstOrDefault();
+        }
+
+        public static double GetPrice(int flightId, string className)
+        {
+            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+
+            Class Class = (from classType in classes
+                           where classType.FlightID == flightId
+                           && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
+                           select classType).FirstOrDefault();
+            return Class?.Price ?? -1;
+
+        }
     }
 }
