@@ -110,6 +110,27 @@ namespace Airport_Ticket_Booking.Services
             }
         }
 
+        public static void SaveFlights(List<Flight> flights)
+        {
+            using (var writer = new StreamWriter(FlightsFile, true))
+            {
+                foreach (var flight in flights)
+                {
+                    writer.WriteLine($"{flight.FlightID},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureAirport},{flight.ArrivalAirport},{flight.DepartureDate}");
+                }
+            }
+        }
+
+        public static void SaveClasses(List<Class> classes)
+        {
+            using (var writer = new StreamWriter(ClassesFile, true))
+            {
+                foreach (var flightClass in classes)
+                {
+                    writer.WriteLine($"{flightClass.FlightID},{flightClass.ClassType},{flightClass.Price},{flightClass.SeatsAvailable}");
+                }
+            }
+        }
     }
 
 }
