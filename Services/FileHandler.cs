@@ -10,9 +10,9 @@ namespace Airport_Ticket_Booking.Services
 {
     class FileHandler
     {
-        private const string FlightsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flights.csv";
-        private const string BookingsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\booking.csv";
-        private const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
+        public const string FlightsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flights.csv";
+        public const string BookingsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\booking.csv";
+        public const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
 
         public static List<Flight> ReadFlights(string FlightsFile)
         {
