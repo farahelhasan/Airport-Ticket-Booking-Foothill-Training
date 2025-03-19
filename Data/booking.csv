@@ -1,5 +1,6 @@
 BookingID,FlightID,UserID,Class,Price
 1,101,1,Economy,500
 2,101,4,First Class,1200
-3,101,2,Economy,500
 4,101,3,Business,1200
+1,103,2,Business,1000
+2,101,2,Business,3000
