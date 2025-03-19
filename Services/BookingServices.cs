@@ -22,6 +22,7 @@ namespace Airport_Ticket_Booking.Services
             {
                 Booking booking = new Booking { BookingID = 1, FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = proice };
                 FileHandler.SaveBooking(booking);
+                FlightServices.DecreaseSeatsAvailable(flightId, classType);
                 return booking;
             }
             return null;
