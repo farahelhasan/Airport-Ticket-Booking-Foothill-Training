@@ -3,7 +3,7 @@ FlightID,ClassType,Price,SeatsAvailable
 101,Business,1200,29
 101,First Class,3000,9
 102,Economy,300,120
-102,Business,800,40
+102,Business,800,39
 102,First Class,2000,15
 103,Economy,450,80
 103,Business,1000,25

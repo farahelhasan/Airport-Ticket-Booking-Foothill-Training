@@ -13,26 +13,33 @@ namespace Airport_Ticket_Booking.Services
     
         public static void BookFlight(int flightId, string classType, int userId)
         {
-            // git the price for the class 
-            double price = GetPrice(flightId, classType);
-            Flight flightToBook = FlightServices.GetFlight(flightId);
-            bool availableSeat = CheckAvailableSeat(flightId, classType);
-
-            if (flightToBook != null && price > 0 && availableSeat)
+            if (CheckAvailableSeat(flightId, classType))
             {
-                Booking booking = new Booking {FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = price };
-                FileHandler.SaveBooking(booking);
-                DecreaseSeatsAvailable(flightId, classType);
-              
-                Console.WriteLine("Booking Successful!");
-                Console.WriteLine(booking);
+                // git the price for the class 
+                double price = GetPrice(flightId, classType);
+                Flight flightToBook = FlightServices.GetFlight(flightId);
+                bool availableSeat = CheckAvailableSeat(flightId, classType);
 
-            }
-            else
-            {
-                Console.WriteLine("Enter vaild FlightId...");
+                if (flightToBook != null && price > 0)
+                {
+                    Booking booking = new Booking { FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = price };
+                    FileHandler.SaveBooking(booking);
+                    DecreaseSeatsAvailable(flightId, classType);
 
+                    Console.WriteLine("Booking Successful!");
+                    Console.WriteLine(booking);
+                    return;
+
+                }
+                else
+                {
+                    Console.WriteLine("Enter vaild FlightId...");
+                    return;
+
+                }
             }
+            Console.WriteLine($"Sorry, you cann't book this flight with ID: {flightId} with class: {classType}, because its full! ");
+            return;
         }
 
         public static void GetUserBooking(int userId)
