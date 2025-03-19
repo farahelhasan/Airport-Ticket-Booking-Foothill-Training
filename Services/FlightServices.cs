@@ -9,12 +9,10 @@ namespace Airport_Ticket_Booking.Services
 {
     class FlightServices
     {
-        private const string FlightsFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flights.csv";
-        private const string ClassesFile = "C:\\Users\\pc\\source\\repos\\Airport Ticket Booking\\Data\\flight_classes.csv";
-
+        
         public static List<Flight> SearchFlights(string DepartureCountry, string DestinationCountry, string DepartureDate)
         {
-            List <Flight> flights = FileHandler.ReadFlights(FlightsFile);
+            List <Flight> flights = FileHandler.ReadFlights(FileHandler.FlightsFile);
             List<Flight> result = (from flight in flights
                                    where flight.DepartureCountry.Equals(DepartureCountry, StringComparison.OrdinalIgnoreCase)
                                    && flight.DestinationCountry.Equals(DestinationCountry, StringComparison.OrdinalIgnoreCase)
@@ -103,7 +101,7 @@ namespace Airport_Ticket_Booking.Services
 
         public static void ImportClassesFromCSV(string ImportedFile)
         {
-            List<Flight> flights = FileHandler.ReadFlights(FlightsFile); 
+            List<Flight> flights = FileHandler.ReadFlights(FileHandler.FlightsFile); 
             List<Class> classes = FileHandler.ReadClasses(ImportedFile);
             List<string> errors = new List<string>();
             List<Class> validClasses = new List<Class>();
@@ -137,7 +135,7 @@ namespace Airport_Ticket_Booking.Services
 
         public static Flight GetFlight(int flightId)
         {
-            List<Flight> flights = FileHandler.ReadFlights(FlightsFile);
+            List<Flight> flights = FileHandler.ReadFlights(FileHandler.FlightsFile);
             return (from flight in flights
                     where flight.FlightID == flightId
                     select flight).FirstOrDefault();

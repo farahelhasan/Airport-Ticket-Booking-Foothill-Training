@@ -20,7 +20,7 @@ namespace Airport_Ticket_Booking.Services
 
             if (flightToBook != null && price > 0 && availableSeat)
             {
-                Booking booking = new Booking { BookingID = 1, FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = price };
+                Booking booking = new Booking {FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = price };
                 FileHandler.SaveBooking(booking);
                 DecreaseSeatsAvailable(flightId, classType);
               
@@ -108,27 +108,32 @@ namespace Airport_Ticket_Booking.Services
             if (selectedBooking == null)
             {
                 Console.WriteLine("Enter Vaild BookingId.");
+                return;
             }
-            else
+            // check if the new class has available seats
+            if(!CheckAvailableSeat(selectedBooking.FlightID, className))
             {
-                // check if the new class has available seats
-                if(CheckAvailableSeat(selectedBooking.FlightID, className))
-                {
-                    DecreaseSeatsAvailable(selectedBooking.FlightID, className);
-                    // we should increase available seats for old class 
-                    IncreaseSeatsAvailable(selectedBooking.FlightID, selectedBooking.Class);
-                    selectedBooking.Class = className;
-                    FileHandler.EditBooking(bookings);
-                    Console.WriteLine($"Bookiing with ID: {selectedBooking.BookingID} modified successfully! ");
-                    Console.WriteLine(selectedBooking);
-                }
-              
+                Console.WriteLine("No available seats in the selected class.");
+                return;
             }
+
+            // we should increase available seats for old class 
+            IncreaseSeatsAvailable(selectedBooking.FlightID, selectedBooking.Class);
+            // decreasing modified class
+            DecreaseSeatsAvailable(selectedBooking.FlightID, className);
+           
+            selectedBooking.Class = className;
+
+            FileHandler.EditBooking(bookings);
+            Console.WriteLine($"Bookiing with ID: {selectedBooking.BookingID} modified successfully! ");
+            Console.WriteLine(selectedBooking);
+
+
         }
 
         private static double GetPrice(int flightId, string className)
         {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+            List<Class> classes = FileHandler.ReadClasses(FileHandler.ClassesFile);
 
             Class selectedClass = (from classType in classes
                                    where classType.FlightID == flightId
@@ -140,7 +145,7 @@ namespace Airport_Ticket_Booking.Services
 
         private static void DecreaseSeatsAvailable(int flightId, string className)
         {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+            List<Class> classes = FileHandler.ReadClasses(FileHandler.ClassesFile);
 
             Class selectedClass = (from classType in classes
                                    where classType.FlightID == flightId
@@ -160,7 +165,7 @@ namespace Airport_Ticket_Booking.Services
 
         private static bool CheckAvailableSeat(int flightId, string className)
         {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+            List<Class> classes = FileHandler.ReadClasses(FileHandler.ClassesFile);
 
             Class selectedClass = (from classType in classes
                                    where classType.FlightID == flightId
@@ -179,14 +184,14 @@ namespace Airport_Ticket_Booking.Services
             }
             else
             {
-                Console.WriteLine("Sorry, you cann't modifiy class, No seats available.");
+                //Console.WriteLine("Sorry, you cann't modifiy class, No seats available.");
                 return false;
             }
         }
 
         private static void IncreaseSeatsAvailable(int flightId, string className)
         {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+            List<Class> classes = FileHandler.ReadClasses(FileHandler.ClassesFile);
 
             Class selectedClass = (from classType in classes
                                    where classType.FlightID == flightId
@@ -204,5 +209,72 @@ namespace Airport_Ticket_Booking.Services
             Console.WriteLine($"Available Seats for {selectedClass.ClassType} class increasing successfully: {selectedClass.SeatsAvailable}");
 
         }
+
+        public static void FilterBookings(
+        int? flightID = null,
+        double? price = null,
+        string departureCountry = null,
+        string destinationCountry = null,
+        DateTime? departureDate = null,
+        string departureAirport = null,
+        string arrivalAirport = null,
+        int? userID = null,
+        string flightClass = null)
+        {
+            List<Booking> bookings = FileHandler.ReadBookings();
+            List<Flight> flights = FileHandler.ReadFlights(FileHandler.FlightsFile);
+
+            // Join bookings with flights to get complete details
+            var filteredBookings = from booking in bookings
+                                   join flight in flights on booking.FlightID equals flight.FlightID
+                                   where
+                                       (flightID == null || booking.FlightID == flightID) &&
+                                       (price == null || booking.Price == price) &&
+                                       (string.IsNullOrEmpty(departureCountry) || flight.DepartureCountry.Equals(departureCountry, StringComparison.OrdinalIgnoreCase)) &&
+                                       (string.IsNullOrEmpty(destinationCountry) || flight.DestinationCountry.Equals(destinationCountry, StringComparison.OrdinalIgnoreCase)) &&
+                                       (departureDate == null || flight.DepartureDate.Date == departureDate.Value.Date) &&
+                                       (string.IsNullOrEmpty(departureAirport) || flight.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
+                                       (string.IsNullOrEmpty(arrivalAirport) || flight.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
+                                       (userID == null || booking.UserID == userID) &&
+                                       (string.IsNullOrEmpty(flightClass) || booking.Class.Equals(flightClass, StringComparison.OrdinalIgnoreCase))
+                                   select new
+                                   {
+                                       booking.BookingID,
+                                       booking.UserID,
+                                       booking.Class,
+                                       booking.Price,
+                                       flight.FlightID,
+                                       flight.DepartureCountry,
+                                       flight.DestinationCountry,
+                                       flight.DepartureAirport,
+                                       flight.ArrivalAirport,
+                                       flight.DepartureDate
+                                   };
+
+            if (filteredBookings.Count() < 1)
+            {
+                Console.WriteLine("No bookings match the provided criteria.");
+                return;
+            }
+
+            // print bookings
+            Console.WriteLine("\nFiltered Bookings:");
+            Console.WriteLine("--------------------------------------------------------------------");
+            foreach (var booking in filteredBookings)
+            {
+                Console.WriteLine($"Booking ID: {booking.BookingID}");
+                Console.WriteLine($"Passenger ID: {booking.UserID}");
+                Console.WriteLine($"Class: {booking.Class}");
+                Console.WriteLine($"Price: {booking.Price}");
+                Console.WriteLine($"Flight ID: {booking.FlightID}");
+                Console.WriteLine($"Departure Country: {booking.DepartureCountry}");
+                Console.WriteLine($"Destination Country: {booking.DestinationCountry}");
+                Console.WriteLine($"Departure Airport: {booking.DepartureAirport}");
+                Console.WriteLine($"Arrival Airport: {booking.ArrivalAirport}");
+                Console.WriteLine($"Departure Date: {booking.DepartureDate}");
+                Console.WriteLine("--------------------------------------------------------------------");
+            }
+        }
+
     }
 }
