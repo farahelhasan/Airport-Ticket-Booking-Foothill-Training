@@ -145,6 +145,19 @@ namespace Airport_Ticket_Booking.Services
             }
         }
 
+        public static void EditBooking(List<Booking> bookings)
+        {
+            using (var writer = new StreamWriter(ClassesFile, false))
+            {
+                writer.WriteLine("BookingID,FlightID,UserID,Class,Price");
+
+                foreach (var booking in bookings)
+                {
+                    writer.WriteLine($"{booking.BookingID},{booking.FlightID},{booking.UserID},{booking.Class},{booking.Price}");
+                }
+            }
+        }
+
 
     }
 
