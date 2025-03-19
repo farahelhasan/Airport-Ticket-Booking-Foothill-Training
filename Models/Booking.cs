@@ -12,7 +12,7 @@ namespace Airport_Ticket_Booking.Models
     {
         private static int nextId = 1;  // Static counter shared across all instances
 
-        public int BookingID { private set; get; }
+        public int BookingID { set; get; }
 
         public int FlightID { set; get; }
         public int UserID { set; get; }
