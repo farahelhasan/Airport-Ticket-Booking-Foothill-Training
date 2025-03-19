@@ -10,7 +10,9 @@ namespace Airport_Ticket_Booking.Models
 {
     class Booking
     {
-        public int BookingID { set; get; }
+        private static int nextId = 1;  // Static counter shared across all instances
+
+        public int BookingID { private set; get; }
 
         public int FlightID { set; get; }
         public int UserID { set; get; }
@@ -18,6 +20,10 @@ namespace Airport_Ticket_Booking.Models
         public String Class { set; get; }
         public double Price { set; get; }
 
+        public Booking()
+        {
+            BookingID = nextId++;  // Assign and increment( as auto increment)
+        }
         public override string ToString()
         {
             return $"BookingID: {BookingID} | FlightID: {FlightID} | UserID: {UserID} | Class: {Class} | Price: {Price}";
