@@ -131,6 +131,21 @@ namespace Airport_Ticket_Booking.Services
                 }
             }
         }
+
+        public static void EditClasses(List<Class> classes)
+        {
+            using (var writer = new StreamWriter(ClassesFile, false))
+            {
+                writer.WriteLine("FlightID,ClassType,Price,SeatsAvailable");
+
+                foreach (var flightClass in classes)
+                {
+                    writer.WriteLine($"{flightClass.FlightID},{flightClass.ClassType},{flightClass.Price},{flightClass.SeatsAvailable}");
+                }
+            }
+        }
+
+
     }
 
 }
