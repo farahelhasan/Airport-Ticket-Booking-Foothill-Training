@@ -143,44 +143,7 @@ namespace Airport_Ticket_Booking.Services
                     select flight).FirstOrDefault();
         }
 
-        public static double GetPrice(int flightId, string className)
-        {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
-
-            Class selectedClass = (from classType in classes
-                           where classType.FlightID == flightId
-                           && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
-                           select classType).FirstOrDefault();
-            return selectedClass?.Price ?? -1;
-
-        }
-
-        public static void DecreaseSeatsAvailable(int flightId, string className)
-        {
-            List<Class> classes = FileHandler.ReadClasses(ClassesFile); 
-
-            Class selectedClass = (from classType in classes
-                                   where classType.FlightID == flightId
-                                   && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
-                                   select classType).FirstOrDefault();
-
-            if (selectedClass == null)
-            {
-                Console.WriteLine("Class not found.");
-                return; 
-            }
-
-            if (selectedClass.SeatsAvailable > 0)
-            {
-                selectedClass.SeatsAvailable--; 
-                FileHandler.EditClasses(classes); 
-                Console.WriteLine($"Seat booked successfully! Remaining seats: {selectedClass.SeatsAvailable}");
-            }
-            else
-            {
-                Console.WriteLine("No seats available.");
-            }
-        }
+      
 
     }
 }
