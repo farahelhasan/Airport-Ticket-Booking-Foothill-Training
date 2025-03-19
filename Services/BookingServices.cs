@@ -56,13 +56,14 @@ namespace Airport_Ticket_Booking.Services
             }
         }
 
-        public static void GetSpesificBooking(int bookingId)
+        public static void GetSpesificBooking(int bookingId, int userId)
         {
             List<Booking> bookings = FileHandler.ReadBookings();
 
-            Booking selectedBooking = (Booking) (from booking in bookings
+            Booking selectedBooking = (from booking in bookings
                                               where booking.BookingID == bookingId
-                                              select booking);
+                                              && booking.UserID == userId
+                                              select booking).FirstOrDefault();
 
             if (selectedBooking == null)
             {
@@ -73,6 +74,28 @@ namespace Airport_Ticket_Booking.Services
                     Console.WriteLine(selectedBooking);
             }
         }
+
+        public static void CancelBooking(int bookingId, int userId)
+        {
+            List<Booking> bookings = FileHandler.ReadBookings();
+
+            Booking selectedBooking = (from booking in bookings
+                                       where booking.BookingID == bookingId
+                                       && booking.UserID == userId
+                                       select booking).FirstOrDefault();
+
+            if (selectedBooking == null)
+            {
+                Console.WriteLine("Enter Vaild BookingId.");
+            }
+            else
+            {
+                bookings.Remove(selectedBooking);
+                FileHandler.EditBooking(bookings);
+                Console.WriteLine($"Bookiing with ID: {selectedBooking.BookingID} deleted successfully! ");
+            }
+        }
+
 
 
 
