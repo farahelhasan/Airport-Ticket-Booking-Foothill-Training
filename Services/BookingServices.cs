@@ -14,15 +14,15 @@ namespace Airport_Ticket_Booking.Services
         public static void BookFlight(int flightId, string classType, int userId)
         {
             // git the price for the class 
-            double price = FlightServices.GetPrice(flightId, classType);
-
+            double price = GetPrice(flightId, classType);
             Flight flightToBook = FlightServices.GetFlight(flightId);
-           
-            if(flightToBook != null && price > 0)
+            bool availableSeat = CheckAvailableSeat(flightId, classType);
+
+            if (flightToBook != null && price > 0 && availableSeat)
             {
                 Booking booking = new Booking { BookingID = 1, FlightID = flightToBook.FlightID, Class = classType, UserID = userId, Price = price };
                 FileHandler.SaveBooking(booking);
-                FlightServices.DecreaseSeatsAvailable(flightId, classType);
+                DecreaseSeatsAvailable(flightId, classType);
               
                 Console.WriteLine("Booking Successful!");
                 Console.WriteLine(booking);
@@ -96,8 +96,113 @@ namespace Airport_Ticket_Booking.Services
             }
         }
 
+        public static void ModifyBooking(int bookingId, int userId, string className)
+        {
+            List<Booking> bookings = FileHandler.ReadBookings();
 
+            Booking selectedBooking = (from booking in bookings
+                                       where booking.BookingID == bookingId
+                                       && booking.UserID == userId
+                                       select booking).FirstOrDefault();
 
+            if (selectedBooking == null)
+            {
+                Console.WriteLine("Enter Vaild BookingId.");
+            }
+            else
+            {
+                // check if the new class has available seats
+                if(CheckAvailableSeat(selectedBooking.FlightID, className))
+                {
+                    DecreaseSeatsAvailable(selectedBooking.FlightID, className);
+                    // we should increase available seats for old class 
+                    IncreaseSeatsAvailable(selectedBooking.FlightID, selectedBooking.Class);
+                    selectedBooking.Class = className;
+                    FileHandler.EditBooking(bookings);
+                    Console.WriteLine($"Bookiing with ID: {selectedBooking.BookingID} modified successfully! ");
+                    Console.WriteLine(selectedBooking);
+                }
+              
+            }
+        }
 
+        private static double GetPrice(int flightId, string className)
+        {
+            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+
+            Class selectedClass = (from classType in classes
+                                   where classType.FlightID == flightId
+                                   && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
+                                   select classType).FirstOrDefault();
+            return selectedClass?.Price ?? -1;
+
+        }
+
+        private static void DecreaseSeatsAvailable(int flightId, string className)
+        {
+            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+
+            Class selectedClass = (from classType in classes
+                                   where classType.FlightID == flightId
+                                   && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
+                                   select classType).FirstOrDefault();
+
+            if (selectedClass == null)
+            {
+                Console.WriteLine("Class not found.");
+                return;
+            }
+
+            selectedClass.SeatsAvailable--;
+            FileHandler.EditClasses(classes);
+            Console.WriteLine($"Available Seats for {selectedClass.ClassType} class decreasing successfully: {selectedClass.SeatsAvailable}");
+        }
+
+        private static bool CheckAvailableSeat(int flightId, string className)
+        {
+            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+
+            Class selectedClass = (from classType in classes
+                                   where classType.FlightID == flightId
+                                   && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
+                                   select classType).FirstOrDefault();
+
+            if (selectedClass == null)
+            {
+                Console.WriteLine("Class not found.");
+                return false;
+            }
+
+            if (selectedClass.SeatsAvailable > 0)
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Sorry, you cann't modifiy class, No seats available.");
+                return false;
+            }
+        }
+
+        private static void IncreaseSeatsAvailable(int flightId, string className)
+        {
+            List<Class> classes = FileHandler.ReadClasses(ClassesFile);
+
+            Class selectedClass = (from classType in classes
+                                   where classType.FlightID == flightId
+                                   && className.Equals(classType.ClassType, StringComparison.OrdinalIgnoreCase)
+                                   select classType).FirstOrDefault();
+
+            if (selectedClass == null)
+            {
+                Console.WriteLine("Class not found.");
+                return;
+            }
+
+            selectedClass.SeatsAvailable++;
+            FileHandler.EditClasses(classes);
+            Console.WriteLine($"Available Seats for {selectedClass.ClassType} class increasing successfully: {selectedClass.SeatsAvailable}");
+
+        }
     }
 }
