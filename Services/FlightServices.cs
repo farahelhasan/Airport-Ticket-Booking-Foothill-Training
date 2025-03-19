@@ -10,16 +10,24 @@ namespace Airport_Ticket_Booking.Services
     class FlightServices
     {
         
-        public static List<Flight> SearchFlights(string DepartureCountry, string DestinationCountry, string DepartureDate)
+        public static void SearchFlights(string DepartureCountry, string DestinationCountry, string DepartureDate)
         {
             List <Flight> flights = FileHandler.ReadFlights(FileHandler.FlightsFile);
             List<Flight> result = (from flight in flights
                                    where flight.DepartureCountry.Equals(DepartureCountry, StringComparison.OrdinalIgnoreCase)
                                    && flight.DestinationCountry.Equals(DestinationCountry, StringComparison.OrdinalIgnoreCase)
-                                   && flight.DepartureDate.Equals(DateTime.Parse(DepartureDate))
+                                   && flight.DepartureDate.Date.Equals(DateTime.Parse(DepartureDate))
                                    && flight.DepartureDate >= DateTime.Now
                                    select flight).ToList();
-            return result;
+            if (result.Count() < 1) 
+            {
+                Console.WriteLine("No flights match the provided criteria");
+                return;
+            }
+            foreach(var flight in flights)
+            {
+                Console.WriteLine(flight);
+            }
         }
 
         public static List<string> ValidateFlight(Flight flight, int rowNumber)
