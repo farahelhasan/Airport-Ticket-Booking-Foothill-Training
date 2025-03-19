@@ -28,6 +28,26 @@ namespace Airport_Ticket_Booking.Services
             return null;
         }
 
+        public static void GetUserBooking(int userId)
+        {
+            List<Booking> bookings = FileHandler.ReadBookings();
+
+            List<Booking> selectedBookings = (from booking in bookings
+                                      where booking.UserID == userId
+                                      select booking).ToList();
+
+            if (selectedBookings.Count() < 1)
+            {
+                Console.WriteLine("You haven't booked any flights yet.");
+            }
+            else
+            {
+                foreach(Booking book in selectedBookings)
+                {
+                    Console.WriteLine(book);
+                }
+            }
+        }
        
     }
 }
