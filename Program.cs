@@ -1,4 +1,5 @@
 ﻿using Airport_Ticket_Booking.Services;
+using Airport_Ticket_Booking.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,14 +17,14 @@ class Program
         {
             while (true)
             {
-                UserServices.ShowManagerMenu();
+                ConsoleUI.ShowManagerMenu();
             }
         }
         else if (role == "Passenger")
         {
             while (true)
             {
-                UserServices.ShowPassengerMenu();
+                ConsoleUI.ShowPassengerMenu();
             }
         }
         else
