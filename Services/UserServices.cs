@@ -14,6 +14,8 @@ namespace Airport_Ticket_Booking.Services
        public static string Login()
         {
             Console.Write("Enter Username: ");
+
+            Console.Write("Enter Username: ");
             string username = Console.ReadLine();
             Console.Write("Enter Password: ");
             string password = Console.ReadLine();
